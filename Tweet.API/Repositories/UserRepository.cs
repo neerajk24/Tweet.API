@@ -7,25 +7,21 @@ namespace Tweet.API.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly List<User> _users;
-        
-        private readonly ApplicationDbContext _dbContext; // Replace YourDbContext with the actual name of your database context
+        private readonly ApplicationDbContext _dbContext;
 
-        public UserRepository(ApplicationDbContext dbContext) // Replace YourDbContext with the actual name of your database context
+        public UserRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _users = new List<User>();
         }
-
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await Task.FromResult(_users.FirstOrDefault(u => u.Email == email));
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User> GetByIdAsync(int id)
         {
-            return await Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User> GetUserByEmail(string email)
@@ -38,11 +34,8 @@ namespace Tweet.API.Repositories
 
         public async Task CreateUserAsync(User user)
         {
-            user.Id = _users.Count + 1;
-            _users.Add(user);
+            _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync(); // Save changes to the database
-            //await Task.CompletedTask;
         }
     }
-
 }
