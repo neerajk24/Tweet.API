@@ -26,8 +26,8 @@ namespace Tweet.API.Controller
             _configuration = configuration;
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Register([FromBody] CreateUserRequestModel createUserRequest)
+        [HttpPost("signup")]
+        public async Task<IActionResult> Register([FromBody] SignupRequestModel createUserRequest)
         {
             // validate input
             if (!base.ModelState.IsValid)
@@ -47,7 +47,7 @@ namespace Tweet.API.Controller
             {
                 Name = createUserRequest.Name,
                 Email = createUserRequest.Email,
-                Password = createUserRequest.Password
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(createUserRequest.Password),
             };
             await _userRepository.CreateUserAsync(newUser);
 
@@ -57,37 +57,42 @@ namespace Tweet.API.Controller
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestModel model)
         {
-            // Validate email and password
+            // Validate input
             if (!ModelState.IsValid)
             {
-                // If email or password is not valid, return appropriate error response
-                return BadRequest("Invalid email or password.");
+                return BadRequest(ModelState);
             }
 
-            // Check against the user repository or database
-            var user = await _userRepository.GetUserByEmail(model.Email);
-            if (user == null || !ValidatePassword(model.Password, user.Password))
+            try
             {
-                // If user not found or password is incorrect, return appropriate error response
-                return BadRequest("Invalid email or password.");
+                // Retrieve user by email
+                var user = await _userRepository.GetUserByEmail(model.Email);
+
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                // Verify password
+                if (BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+                {
+                    // Password matches, user is authenticated
+                    // You can generate and return a JWT token for authentication, or set a session, etc.
+                    // Example:
+                    var token = GenerateJwtToken(user); // Replace with your JWT token generation logic
+                    return Ok(new { token });
+                }
+                else
+                {
+                    // Password doesn't match, return unauthorized
+                    return Unauthorized("Invalid password");
+                }
             }
-
-            // Generate authentication tokens (e.g. JWT)
-            var token = GenerateJwtToken(user);
-
-            // Return success response with authentication token
-            return Ok(new { Token = token });
-        }
-
-        private bool ValidatePassword(string password, string hashedPassword)
-        {
-            // Implement password validation logic, e.g. check for required complexity
-            // (e.g. at least one capital letter, one small letter, one number, and one symbol)
-            // You can use regular expressions, string manipulation, or third-party libraries for this
-
-            // Example validation using regular expressions
-            var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$");
-            return regex.IsMatch(password) && BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            catch (Exception ex)
+            {
+                // Handle exception and return error response
+                return StatusCode(500, "An error occurred during login");
+            }
         }
 
         //private string GenerateJwtToken(User user)

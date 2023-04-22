@@ -3,7 +3,7 @@ using Tweet.API.Validators;
 
 namespace Tweet.API.Model
 {
-    public class CreateUserRequestModel
+    public class SignupRequestModel
     {
         [Required]
         public string Name { get; set; }
