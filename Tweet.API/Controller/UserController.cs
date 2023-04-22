@@ -14,7 +14,7 @@ using BCrypt.Net; // Import the BCrypt.Net namespace
 namespace Tweet.API.Controller
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -94,6 +94,8 @@ namespace Tweet.API.Controller
                 return StatusCode(500, "An error occurred during login");
             }
         }
+
+
 
         //private string GenerateJwtToken(User user)
         private string GenerateJwtToken(User user)
