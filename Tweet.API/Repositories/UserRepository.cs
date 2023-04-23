@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tweet.API.Data;
 using Tweet.API.Interface;
-using Tweet.API.Model;
+using Tweet.API.Entities;
 
 namespace Tweet.API.Repositories
 {
@@ -38,5 +38,6 @@ namespace Tweet.API.Repositories
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync(); // Save changes to the database
         }
+
     }
 }

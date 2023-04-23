@@ -9,7 +9,7 @@ using Tweet.API.Interface;
 using Tweet.API.Model;
 using BCrypt; // Import the BCrypt namespace
 using BCrypt.Net; // Import the BCrypt.Net namespace
-
+using Tweet.API.Entities;
 
 namespace Tweet.API.Controller
 {
@@ -95,6 +95,30 @@ namespace Tweet.API.Controller
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUserInfo(int id)
+        {
+            // Fetch user information from the repository or database
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(); // User not found
+            }
+
+            // Create UserInfo object with required user information
+            var userInfo = new User
+            {
+                Id = user.Id,
+                Name = user.Name,
+                ProfilePicture = user.ProfilePicture,
+                Bio = user.Bio,
+                FollowersCount = user.FollowersCount, // Assuming you have a Followers collection in your User model
+                Tweets = user.Tweets // Assuming you have a Tweets collection in your User model
+            };
+
+            return Ok(userInfo);
+        }
 
 
         //private string GenerateJwtToken(User user)
