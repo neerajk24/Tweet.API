@@ -120,6 +120,28 @@ namespace Tweet.API.Controller
             return Ok(userInfo);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditProfile(int id, [FromBody] UserProfileModel userProfileModel)
+        {
+            // Fetch user information from the repository or database
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(); // User not found
+            }
+
+            // Update user profile details with the provided data
+            user.Name = userProfileModel.Name;
+            user.ProfilePicture = userProfileModel.ProfilePicture;
+            user.Bio = userProfileModel.Bio;
+
+            // Save changes to the repository or database
+            await _userRepository.UpdateAsync(user);
+
+            return Ok(); // Profile details updated successfully
+        }
+
 
         //private string GenerateJwtToken(User user)
         private string GenerateJwtToken(User user)

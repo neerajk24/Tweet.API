@@ -8,6 +8,7 @@ namespace Tweet.API.Interface
         Task<User> GetByEmailAsync(string email);
         Task<User> GetByIdAsync(int id);
         Task CreateUserAsync(User user);
+        Task UpdateAsync(User user);
     }
 
 }

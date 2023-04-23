@@ -31,13 +31,16 @@ namespace Tweet.API.Repositories
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
-
-
         public async Task CreateUserAsync(User user)
         {
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync(); // Save changes to the database
         }
 
+        public async Task UpdateAsync(User user)
+        {
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync(); // Save changes to the database
+        }
     }
 }
