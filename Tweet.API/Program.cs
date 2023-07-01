@@ -71,7 +71,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add your DI container configuration code here
 builder.Services.AddScoped<IUserRepository, UserRepository>(); // Replace UserRepository with the actual implementation of IUserRepository
-
+builder.Services.AddScoped<ITweetRepository, TweetRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
