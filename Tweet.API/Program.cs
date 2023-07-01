@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Data.SqlClient;
-
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,9 +77,19 @@ builder.Services.AddScoped<ITweetRepository, TweetRepository>();
 builder.Services.AddRazorPages();
 
 // Register Swagger services
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Documentation", Version = "v1" });
+    // Include the Bearer token authentication filter
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme.",
+    });
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 var app = builder.Build();
@@ -96,6 +106,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Documentation v1");
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();

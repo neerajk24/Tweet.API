@@ -82,7 +82,8 @@ namespace Tweet.API.Controller
                     // You can generate and return a JWT token for authentication, or set a session, etc.
                     // Example:
                     var token = GenerateJwtToken(user); // Replace with your JWT token generation logic
-                    return Ok(new { token });
+                    //return Ok(new { token });
+                    return Ok(new { token, user.Id });
                 }
                 else
                 {
@@ -112,10 +113,10 @@ namespace Tweet.API.Controller
             List<Entities.Tweet> ownTweets = await _tweetRepository.GetTweetsByUserIdAsync(id);
 
             // Fetch tweets liked by the user from the repository or database
-            List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
+            //List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
 
             // Fetch tweets retweeted by the user from the repository or database
-            List<Entities.Tweet> retweetedTweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(id);
+            //List<Entities.Tweet> retweetedTweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(id);
 
             // Create UserInfo object with required user information
             var userInfo = new User

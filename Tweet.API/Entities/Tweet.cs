@@ -8,8 +8,13 @@ namespace Tweet.API.Entities
     {
         [Key]
         public int Id { get; set; } // Primary key property
-        public string Content { get; set; }
-        public int Likes { get; set; }
+        public string? Content { get; set; }
+
+        public DateTime Timestamp { get; set; }
+        public int Likes { get; set; } = 0;
+
+        public int Retweets { get; set; } = 0;
+        
 
         // Foreign key property for User
         public int UserId { get; set; }
@@ -39,6 +44,9 @@ namespace Tweet.API.Entities
         // Foreign key property for Tweet
         public int TweetId { get; set; }
         public Tweet Tweet { get; set; }
+
+        public int UserId { get; set; }
+        public User? User { get; set; }
     }
 
     public class Share

@@ -14,32 +14,65 @@ namespace Tweet.API.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<List<Entities.Tweet>> GetLikedTweetsByUserIdAsync(int userId)
+        public async Task<List<Entities.Tweet>> GetTweetsByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            var tweets = await _dbContext.Tweets
+                .Include(t => t.User)
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
+
+            return tweets;
         }
+
+        public async Task<Entities.Tweet> GetTweetByIdAsync(int tweetId)
+        {
+            var tweet = await _dbContext.Tweets.FindAsync(tweetId);
+            return tweet;
+        }
+
+        public async Task CreateTweetAsync(Entities.Tweet tweet)
+        {
+            _dbContext.Tweets.Add(tweet);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Entities.Tweet>> GetLikedTweetsByUserIdAsync(int userId)
+        {
+            var likedTweets = await _dbContext.Tweets
+                .Where(t => t.Likes > 0)
+                .ToListAsync();
+
+            return likedTweets;
+        }
+
 
         public Task<List<Entities.Tweet>> GetRetweetedTweetsByUserIdAsync(int userId)
         {
             throw new NotImplementedException();
         }
 
-        // Fetch tweets authored by the user from the database
-        public async Task<List<Entities.Tweet>> GetTweetsByUserIdAsync(int userId)
+        public async Task UpdateTweetAsync(Entities.Tweet tweet)
         {
-            return await _dbContext.Tweets.Where(t => t.UserId == userId).ToListAsync();
+            _dbContext.Tweets.Update(tweet);
+            await _dbContext.SaveChangesAsync();
         }
 
-        // Fetch tweets liked by the user from the database
-        //public async Task<List<Entities.Tweet>> GetLikedTweetsByUserIdAsync(int userId)
-        //{
-        //    //return await _dbContext.Tweets.Where(t => t.LikedByUsers.Any(u => u.Id == userId)).ToListAsync();
-        //}
+        public async Task CreateCommentAsync(Comment comment)
+        {
+            _dbContext.Comments.Add(comment);
+            await _dbContext.SaveChangesAsync();
+        }
 
-        //// Fetch tweets retweeted by the user from the database
+
         //public async Task<List<Entities.Tweet>> GetRetweetedTweetsByUserIdAsync(int userId)
         //{
-        //    //return await _dbContext.Tweets.Where(t => t.RetweetedByUsers.Any(u => u.Id == userId)).ToListAsync();
+        //    var retweetedTweets = await _dbContext.Tweets
+        //        .Include(t => t.Retweets)
+        //        .Where(t => t.Retweets.Any(r => r.UserId == userId))
+        //        .ToListAsync();
+
+        //    return retweetedTweets;
         //}
     }
+
 }
