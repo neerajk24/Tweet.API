@@ -24,10 +24,10 @@ namespace Tweet.API.Entities
         // Additional properties for a tweet such as timestamp, author, etc. can also be added here
 
         // Collection of users who liked the tweet
-        public ICollection<UserLikedTweets> UserLikedTweets { get; set; } // Newly added field as a list of tweets liked by the user
+        //public ICollection<UserLikedTweets>? UserLikedTweets { get; set; } // Newly added field as a list of tweets liked by the user
 
         // Collection of users who retweeted the tweet
-        public ICollection<UserRetweetedTweets> UserRetweetedTweets { get; set; }
+        //public ICollection<UserRetweetedTweets>? UserRetweetedTweets { get; set; }
     }
 
     public class Comment

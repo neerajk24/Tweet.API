@@ -26,11 +26,11 @@ namespace Tweet.API.Entities
 
         // Foreign key property for User
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         // Foreign key property for Tweet
         public int TweetId { get; set; }
-        public Tweet Tweet { get; set; }
+        public Tweet? Tweet { get; set; }
     }
 
 }

@@ -11,31 +11,31 @@ namespace Tweet.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserLikedTweets>()
-            .HasKey(ul => new { ul.UserId, ul.TweetId }); // Configure the composite primary key for the junction table
+            //modelBuilder.Entity<UserLikedTweets>()
+            //.HasKey(ul => new { ul.UserId, ul.TweetId }); // Configure the composite primary key for the junction table
 
-            modelBuilder.Entity<UserLikedTweets>()
-                .HasOne<User>(sc => sc.User)
-                .WithMany(u => u.UserLikedTweets)
-                .HasForeignKey(ul => ul.UserId); // Configure the foreign key relationship for Student
+            //modelBuilder.Entity<UserLikedTweets>()
+            //    .HasOne<User>(sc => sc.User)
+            //    .WithMany(u => u.UserLikedTweets)
+            //    .HasForeignKey(ul => ul.UserId); // Configure the foreign key relationship for Student
 
-            modelBuilder.Entity<UserLikedTweets>()
-                .HasOne(ul => ul.Tweet)
-                .WithMany(t => t.UserLikedTweets)
-                .HasForeignKey(ul => ul.TweetId); // Configure the foreign key relationship for Course
+            //modelBuilder.Entity<UserLikedTweets>()
+            //    .HasOne(ul => ul.Tweet)
+            //    .WithMany(t => t.UserLikedTweets)
+            //    .HasForeignKey(ul => ul.TweetId); // Configure the foreign key relationship for Course
 
-            modelBuilder.Entity<UserRetweetedTweets>()
-           .HasKey(ul => new { ul.UserId, ul.TweetId }); // Configure the composite primary key for the junction table
+           // modelBuilder.Entity<UserRetweetedTweets>()
+           //.HasKey(ul => new { ul.UserId, ul.TweetId }); // Configure the composite primary key for the junction table
 
-            modelBuilder.Entity<UserRetweetedTweets>()
-                .HasOne<User>(sc => sc.User)
-                .WithMany(u => u.UserRetweetedTweets)
-                .HasForeignKey(ul => ul.UserId); // Configure the foreign key relationship for Student
+           // modelBuilder.Entity<UserRetweetedTweets>()
+           //     .HasOne<User>(sc => sc.User)
+           //     .WithMany(u => u.UserRetweetedTweets)
+           //     .HasForeignKey(ul => ul.UserId); // Configure the foreign key relationship for Student
 
-            modelBuilder.Entity<UserRetweetedTweets>()
-                .HasOne(ul => ul.Tweet)
-                .WithMany(t => t.UserRetweetedTweets)
-                .HasForeignKey(ul => ul.TweetId); // Configure the foreign key relationship for Course
+           // modelBuilder.Entity<UserRetweetedTweets>()
+           //     .HasOne(ul => ul.Tweet)
+           //     .WithMany(t => t.UserRetweetedTweets)
+           //     .HasForeignKey(ul => ul.TweetId); // Configure the foreign key relationship for Course
 
             // ... other configurations ...
 
@@ -52,6 +52,6 @@ namespace Tweet.API.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Entities.Tweet> Tweets { get; set; }
-        public DbSet<UserLikedTweets> UserLikedTweets { get; set; }
+        //public DbSet<UserLikedTweets> UserLikedTweets { get; set; }
     }
 }
