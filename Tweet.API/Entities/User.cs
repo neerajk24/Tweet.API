@@ -6,10 +6,12 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string ProfilePicture { get; set; } // Profile picture field
-        public string Bio { get; set; } // Bio field
-        public int FollowersCount { get; set; } // Followers count field
-        public List<Tweet> Tweets { get; set; } // Newly added field as a list of UserTweet
-    }
+        public string ProfilePicture { get; set; }
+        public string Bio { get; set; }
+        public int FollowersCount { get; set; }
 
+        public List<Tweet> Tweets { get; set; }
+        public ICollection<UserLikedTweets> UserLikedTweets { get; set; }
+        public ICollection<UserRetweetedTweets> UserRetweetedTweets { get; set; }
+    }
 }

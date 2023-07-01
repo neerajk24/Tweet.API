@@ -18,11 +18,13 @@ namespace Tweet.API.Controller
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITweetRepository _tweetRepository;
         private readonly IConfiguration _configuration;
 
-        public UserController(IUserRepository userRepository, IConfiguration configuration)
+        public UserController(IUserRepository userRepository, ITweetRepository tweetRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _tweetRepository = tweetRepository;
             _configuration = configuration;
         }
 
@@ -106,6 +108,15 @@ namespace Tweet.API.Controller
                 return NotFound(); // User not found
             }
 
+            // Fetch user's own tweets from the repository or database
+            List<Entities.Tweet> ownTweets = await _tweetRepository.GetTweetsByUserIdAsync(id);
+
+            // Fetch tweets liked by the user from the repository or database
+            List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
+
+            // Fetch tweets retweeted by the user from the repository or database
+            List<Entities.Tweet> retweetedTweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(id);
+
             // Create UserInfo object with required user information
             var userInfo = new User
             {
@@ -113,12 +124,15 @@ namespace Tweet.API.Controller
                 Name = user.Name,
                 ProfilePicture = user.ProfilePicture,
                 Bio = user.Bio,
-                FollowersCount = user.FollowersCount, // Assuming you have a Followers collection in your User model
-                Tweets = user.Tweets // Assuming you have a Tweets collection in your User model
+                FollowersCount = user.FollowersCount,
+                //Tweets = ownTweets,
+               // LikedTweets = likedTweets,
+               // RetweetedTweets = retweetedTweets
             };
 
             return Ok(userInfo);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> EditProfile(int id, [FromBody] UserProfileModel userProfileModel)

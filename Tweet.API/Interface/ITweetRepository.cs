@@ -1,13 +1,15 @@
 ﻿using Tweet.API.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Tweet.API.Interface
 {
     public interface ITweetRepository
     {
-        //Task<User> GetUserByEmail(string email);
-        //Task<User> GetByEmailAsync(string email);
-        //Task<User> GetByIdAsync(int id);
-        //Task CreateUserAsync(User user);
-    }
+        Task<List<Tweet.API.Entities.Tweet>> GetTweetsByUserIdAsync(int userId); // Fetch tweets authored by the user
 
+        Task<List<Entities.Tweet>> GetLikedTweetsByUserIdAsync(int userId); // Fetch tweets liked by the user
+
+        Task<List<Entities.Tweet>> GetRetweetedTweetsByUserIdAsync(int userId); // Fetch tweets retweeted by the user
+    }
 }
