@@ -24,16 +24,11 @@ namespace Tweet.API.Data
                 .HasForeignKey(c => c.TweetId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-    //        modelBuilder.Entity<Comment>()
-    //.HasOne(c => c.User)
-    //.WithMany()
-    //.HasForeignKey(c => c.UserId);
-
-    //        modelBuilder.Entity<Comment>()
-    //.HasOne(c => c.User)
-    //.WithMany()
-    //.HasForeignKey(c => c.UserId)
-    //.OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>()
+    .HasOne(c => c.User)
+    .WithMany()
+    .HasForeignKey(c => c.UserId)
+    .OnDelete(DeleteBehavior.NoAction);
 
 
             //modelBuilder.Entity<UserLikedTweets>()

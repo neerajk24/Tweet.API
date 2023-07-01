@@ -46,9 +46,9 @@ namespace Tweet.API.Entities
         public int TweetId { get; set; }
         public virtual Tweet? Tweet { get; set; }
 
-        //[ForeignKey("User")]
-        //public int UserId { get; set; }
-        //public virtual User? User { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public virtual User? User { get; set; }
     }
 
     public class Share
