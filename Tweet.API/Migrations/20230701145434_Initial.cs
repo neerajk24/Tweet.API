@@ -1,35 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Tweet.API.Migrations
 {
     /// <inheritdoc />
-    public partial class MyMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Bio",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<int>(
-                name: "FollowersCount",
-                table: "Users",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ProfilePicture",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FollowersCount = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.CreateTable(
                 name: "Tweets",
@@ -37,8 +41,10 @@ namespace Tweet.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false),
+                    Retweets = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -53,19 +59,19 @@ namespace Tweet.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TweetId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_Tweets_TweetId",
+                        name: "FK_Comments_Tweets_TweetId",
                         column: x => x.TweetId,
                         principalTable: "Tweets",
                         principalColumn: "Id",
@@ -133,8 +139,8 @@ namespace Tweet.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_TweetId",
-                table: "Comment",
+                name: "IX_Comments_TweetId",
+                table: "Comments",
                 column: "TweetId");
 
             migrationBuilder.CreateIndex(
@@ -153,6 +159,11 @@ namespace Tweet.API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_UserId",
+                table: "Users",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Video_TweetId",
                 table: "Video",
                 column: "TweetId");
@@ -162,7 +173,7 @@ namespace Tweet.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Image");
@@ -176,17 +187,8 @@ namespace Tweet.API.Migrations
             migrationBuilder.DropTable(
                 name: "Tweets");
 
-            migrationBuilder.DropColumn(
-                name: "Bio",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "FollowersCount",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "ProfilePicture",
-                table: "Users");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

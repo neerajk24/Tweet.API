@@ -161,7 +161,7 @@ namespace Tweet.API.Controller
                     // Create a new comment
                     var comment = new Comment
                     {
-                        UserId = userId,
+                       // UserId = userId,
                         TweetId = tweetId,
                         Content = model.Content,
                         // Set other properties as needed

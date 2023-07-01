@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tweet.API.Entities
 {
@@ -15,13 +16,13 @@ namespace Tweet.API.Entities
 
         public int Retweets { get; set; } = 0;
         
-
-        // Foreign key property for User
+        [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public virtual User? User { get; set; }
 
         // Navigation properties for related entities
-        public List<Comment> Comments { get; set; }
+        //public List<Comment> Comments { get; set; }
+        public virtual ICollection<Comment>? Comments { get; set; }
         public List<Share> Shares { get; set; }
         public List<Image> Images { get; set; }
         public List<Video> Videos { get; set; }
@@ -39,14 +40,15 @@ namespace Tweet.API.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
-        // Foreign key property for Tweet
+        [ForeignKey("Tweet")]
         public int TweetId { get; set; }
-        public Tweet Tweet { get; set; }
+        public virtual Tweet? Tweet { get; set; }
 
-        public int UserId { get; set; }
-        public User? User { get; set; }
+        //[ForeignKey("User")]
+        //public int UserId { get; set; }
+        //public virtual User? User { get; set; }
     }
 
     public class Share
