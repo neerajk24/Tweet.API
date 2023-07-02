@@ -88,6 +88,7 @@ namespace Tweet.API.Controller
                     {
                         UserId = userId,
                         Content = model.Content,
+
                         // Set other properties as needed
                     };
 
