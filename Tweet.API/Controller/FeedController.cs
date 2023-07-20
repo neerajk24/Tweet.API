@@ -51,8 +51,8 @@ namespace Tweet.API.Controller
                     var tweetViewModels = tweets.Select(tweet => new TweetModel
                     {
                         Content = tweet.Content,
-                        UserName = tweet.User.Name,
-                        Timestamp = tweet.Timestamp
+                        //UserName = tweet.User.Name,
+                        
                         // Include other relevant information
                     }).ToList();
 
@@ -88,13 +88,13 @@ namespace Tweet.API.Controller
                     {
                         UserId = userId,
                         Content = model.Content,
-
+                        Timestamp = DateTime.Now
                         // Set other properties as needed
                     };
 
                     await _tweetRepository.CreateTweetAsync(tweet);
 
-                    return Ok(tweet);
+                    return Ok(true);
                 }
                 catch (Exception ex)
                 {
