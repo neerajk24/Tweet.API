@@ -18,6 +18,7 @@ namespace Tweet.API.Repositories
         {
             var tweets = await _dbContext.Tweets
                 .Include(t => t.User)
+                .Include(t=> t.Comments)
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
 
