@@ -112,6 +112,12 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
+    await next();
+});
+app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 app.UseAuthorization();
 app.MapControllers(); // Map controllers
 app.MapRazorPages();
