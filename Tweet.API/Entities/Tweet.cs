@@ -23,7 +23,7 @@ namespace Tweet.API.Entities
         // Navigation properties for related entities
         //public List<Comment> Comments { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
-        public List<Share> Shares { get; set; }
+        public int Shares { get; set; }
         public List<Image> Images { get; set; }
         public List<Video> Videos { get; set; }
 

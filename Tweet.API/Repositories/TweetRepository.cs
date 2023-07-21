@@ -49,7 +49,11 @@ namespace Tweet.API.Repositories
 
         public Task<List<Entities.Tweet>> GetRetweetedTweetsByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            var reTweets = _dbContext.Tweets
+                .Where(t => t.Retweets == userId)
+                .ToListAsync();
+
+            return reTweets;
         }
 
         public async Task UpdateTweetAsync(Entities.Tweet tweet)

@@ -47,22 +47,62 @@ namespace Tweet.API.Controller
                     // Fetch tweets from the user and the users they follow, sorted chronologically
                     var tweets = await _tweetRepository.GetTweetsByUserIdAsync(userId);
 
-                    // Create a view model or transform the tweet entities as needed
-                    var tweetViewModels = tweets.Select(tweet => new TweetModel
+                var retweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(userId);
+
+                var tweetViewModels = tweets.Select(tweet =>
+                {
+                    var tweetModel = new TweetModel
                     {
+                        Id = tweet.Id,
                         Content = tweet.Content.ToString(),
                         Likes = tweet.Likes,
                         Comments = tweet.Comments.Select(comment => comment.Content).ToList(),
-                        //Shares = tweet.Shares.Select(share => share.Content).ToList(),
+                        Timestamp = tweet.Timestamp,
+                        Shares = tweet.Shares,
+                       
+                        //ReTweetModel = new TweetModel() // Initialize the list to store retweets
+                    };
 
-                        //UserName = tweet.User.Name,
+                    // Find all the corresponding retweets for this tweet from the retweets list
+                    var matchingRetweets = retweets.Where(retweet => retweet.Id == tweet.Id);
 
-                        // Include other relevant information
+                    // If there are matching retweets, add them to the ReTweetModel list
+                    //if (matchingRetweets.Any())
+                    //{
+                    //    foreach (var retweet in matchingRetweets)
+                    //    {
+                    //        tweetModel.ReTweetModel.Add(new TweetModel
+                    //        {
+                    //            Id = retweet.Id,
+                    //            Content = retweet.Content.ToString(),
+                    //            Likes = retweet.Likes,
+                    //            Comments = retweet.Comments.Select(comment => comment.Content).ToList(),
+                    //            Timestamp = retweet.Timestamp,
+                    //            Shares = retweet.Shares
+     
+                    //        });
+                    //    }
+                    //}
 
-                    }).ToList();
+                    return tweetModel;
+                }).ToList();
 
-                    return Ok(tweetViewModels);
-                }
+               // Create a view model or transform the tweet entities as needed
+                //var tweetViewModels = tweets.Select(tweet => new TweetModel
+                //{
+                //    Content = tweet.Content.ToString(),
+                //    Likes = tweet.Likes,
+                //    Comments = tweet.Comments.Select(comment => comment.Content).ToList(),
+                //    Timestamp = tweet.Timestamp,
+                //    Id = tweet.Id,
+                //    ReTweetModel = new TweetModel()
+
+                //}).ToList();
+
+
+                return Ok(tweetViewModels);
+
+            }
                 catch (Exception ex)
                 {
                     // Handle exception and return error response
@@ -93,7 +133,9 @@ namespace Tweet.API.Controller
                     {
                         UserId = userId,
                         Content = model.Content,
-                        Timestamp = DateTime.Now
+                        Timestamp = DateTime.Now,
+                        
+                        
                         // Set other properties as needed
                     };
 
