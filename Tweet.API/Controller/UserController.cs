@@ -113,7 +113,7 @@ namespace Tweet.API.Controller
             List<Entities.Tweet> ownTweets = await _tweetRepository.GetTweetsByUserIdAsync(id);
 
             // Fetch tweets liked by the user from the repository or database
-            //List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
+            List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
 
             // Fetch tweets retweeted by the user from the repository or database
             //List<Entities.Tweet> retweetedTweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(id);
@@ -126,7 +126,8 @@ namespace Tweet.API.Controller
                 ProfilePicture = user.ProfilePicture,
                 Bio = user.Bio,
                 FollowersCount = user.FollowersCount,
-                //Tweets = ownTweets,
+                Email = user.Email,
+                Tweets = ownTweets,
                // LikedTweets = likedTweets,
                // RetweetedTweets = retweetedTweets
             };

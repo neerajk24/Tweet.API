@@ -50,10 +50,15 @@ namespace Tweet.API.Controller
                     // Create a view model or transform the tweet entities as needed
                     var tweetViewModels = tweets.Select(tweet => new TweetModel
                     {
-                        Content = tweet.Content,
+                        Content = tweet.Content.ToString(),
+                        Likes = tweet.Likes,
+                        Comments = tweet.Comments.Select(comment => comment.Content).ToList(),
+                        //Shares = tweet.Shares.Select(share => share.Content).ToList(),
+
                         //UserName = tweet.User.Name,
-                        
+
                         // Include other relevant information
+
                     }).ToList();
 
                     return Ok(tweetViewModels);
@@ -136,8 +141,8 @@ namespace Tweet.API.Controller
             }
 
             // POST: api/feed/{userId}/tweets/{tweetId}/comment
-            [HttpPost("{userId}/tweets/{tweetId}/comment")]
-            public async Task<IActionResult> CommentOnTweet(int userId, int tweetId, [FromBody] CommentModel model)
+            [HttpPost("Tweet/comment")]
+            public async Task<IActionResult> CommentOnTweet([FromBody] CommentModel model)
             {
                 // Validate input
                 if (!ModelState.IsValid)
@@ -147,13 +152,13 @@ namespace Tweet.API.Controller
 
                 try
                 {
-                    var user = await _userRepository.GetByIdAsync(userId);
+                    var user = await _userRepository.GetByIdAsync(model.UserId);
                     if (user == null)
                     {
                         return NotFound("User not found");
                     }
 
-                    var tweet = await _tweetRepository.GetTweetByIdAsync(tweetId);
+                    var tweet = await _tweetRepository.GetTweetByIdAsync(model.TweetId);
                     if (tweet == null)
                     {
                         return NotFound("Tweet not found");
@@ -162,15 +167,16 @@ namespace Tweet.API.Controller
                     // Create a new comment
                     var comment = new Comment
                     {
-                       // UserId = userId,
-                        TweetId = tweetId,
+                        UserId = model.UserId,
+                        TweetId = model.TweetId,
                         Content = model.Content,
+
                         // Set other properties as needed
                     };
 
                     await _tweetRepository.CreateCommentAsync(comment);
 
-                    return Ok(comment);
+                    return Ok("Comment added");
                 }
                 catch (Exception ex)
                 {
