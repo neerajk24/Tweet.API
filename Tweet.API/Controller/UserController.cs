@@ -10,6 +10,8 @@ using Tweet.API.Model;
 using BCrypt; // Import the BCrypt namespace
 using BCrypt.Net; // Import the BCrypt.Net namespace
 using Tweet.API.Entities;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Tweet.API.Controller
 {
@@ -109,15 +111,6 @@ namespace Tweet.API.Controller
                 return NotFound(); // User not found
             }
 
-            // Fetch user's own tweets from the repository or database
-            List<Entities.Tweet> ownTweets = await _tweetRepository.GetTweetsByUserIdAsync(id);
-
-            // Fetch tweets liked by the user from the repository or database
-            List<Entities.Tweet> likedTweets = await _tweetRepository.GetLikedTweetsByUserIdAsync(id);
-
-            // Fetch tweets retweeted by the user from the repository or database
-            //List<Entities.Tweet> retweetedTweets = await _tweetRepository.GetRetweetedTweetsByUserIdAsync(id);
-
             // Create UserInfo object with required user information
             var userInfo = new User
             {
@@ -126,14 +119,47 @@ namespace Tweet.API.Controller
                 ProfilePicture = user.ProfilePicture,
                 Bio = user.Bio,
                 FollowersCount = user.FollowersCount,
-                Email = user.Email,
-                Tweets = ownTweets,
-               // LikedTweets = likedTweets,
-               // RetweetedTweets = retweetedTweets
+                Email = user.Email
             };
+
+            // Fetch user's own tweets from the repository or database
+            List<Entities.Tweet> ownTweets = await _tweetRepository.GetTweetsByUserIdAsync(id);
+
+            // Create JsonSerializerOptions with ReferenceHandler.Preserve
+            
+
+            // Serialize ownTweets to JSON using the JsonSerializerOptions
+ 
+
+            // Deserialize ownTweetsJson back to List<Entities.Tweet> to resolve circular references
+
+
+            // Assign the deserializedOwnTweets to the user info object
+            userInfo.Tweets = ownTweets;
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true // Optional: Makes the output more readable with indentation
+            };
+
+            try
+            {
+                string userInfoJson = JsonSerializer.Serialize(userInfo, options);
+                return Ok(userInfoJson);
+            }
+            catch (JsonException ex)
+            {
+                // If there's a circular reference, it will be captured in the JsonException
+                // Print or log the ex.Message to identify the path of the circular reference
+                Console.WriteLine(ex.Message);
+                throw; // Rethrow the exception
+            }
+
 
             return Ok(userInfo);
         }
+
 
 
         [HttpPut("{id}")]

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Tweet.API.Entities
 {
@@ -15,7 +16,8 @@ namespace Tweet.API.Entities
         public int Likes { get; set; } = 0;
 
         public int Retweets { get; set; } = 0;
-        
+
+        [JsonIgnore]
         [ForeignKey("User")]
         public int UserId { get; set; }
         public virtual User? User { get; set; }
@@ -24,7 +26,9 @@ namespace Tweet.API.Entities
         //public List<Comment> Comments { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
         public int Shares { get; set; }
+        [JsonIgnore]
         public List<Image> Images { get; set; }
+        [JsonIgnore]
         public List<Video> Videos { get; set; }
 
         // Additional properties for a tweet such as timestamp, author, etc. can also be added here
@@ -45,9 +49,10 @@ namespace Tweet.API.Entities
         [ForeignKey("Tweet")]
         public int TweetId { get; set; }
         public virtual Tweet? Tweet { get; set; }
-
+        [JsonIgnore]
         [ForeignKey("User")]
         public int UserId { get; set; }
+        [JsonIgnore]
         public virtual User? User { get; set; }
     }
 
