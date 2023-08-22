@@ -1,134 +1,17 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Tweet.API.Interface;
-using Tweet.API.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Tweet.API.Data;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Data.SqlClient;
-using Swashbuckle.AspNetCore.Filters;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add configuration
-builder.Configuration.AddJsonFile("appsettings.json");
-
-builder.Services.AddAuthentication(options =>
+public class Program
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+    public static void Main(string[] args)
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:SecretKey"])),
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JwtConfig:Audience"],
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
+        CreateHostBuilder(args).Build().Run();
+    }
 
-
-
-// Add services to the container
-
-builder.Services.AddControllers();
-
-// Configure services
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString)
-    {
-        TrustServerCertificate = true
-    };
-    options.UseSqlServer(connectionStringBuilder.ConnectionString);
-});
-
-
-
-
-// Add your DI container configuration code here
-builder.Services.AddScoped<IUserRepository, UserRepository>(); // Replace UserRepository with the actual implementation of IUserRepository
-builder.Services.AddScoped<ITweetRepository, TweetRepository>();
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-// Register Swagger services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Documentation", Version = "v1" });
-    // Include the Bearer token authentication filter
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        Description = "JWT Authorization header using the Bearer scheme.",
-    });
-    c.OperationFilter<SecurityRequirementsOperationFilter>();
-});
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Documentation v1");
-    c.RoutePrefix = string.Empty;
-});
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-    await next();
-});
-app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
-app.UseAuthorization();
-app.MapControllers(); // Map controllers
-app.MapRazorPages();
-
-// Resolve the ApplicationDbContext from the DI container
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-    // Seed data or perform any other initialization logic here
-}
-
-app.Run();
-
