@@ -1,4 +1,6 @@
-﻿namespace Tweet.API.Entities
+﻿using System.Collections.Generic;
+
+namespace Tweet.API.Entities
 {
     public class User
     {

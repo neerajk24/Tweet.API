@@ -12,6 +12,10 @@ using BCrypt.Net; // Import the BCrypt.Net namespace
 using Tweet.API.Entities;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
 
 namespace Tweet.API.Controller
 {

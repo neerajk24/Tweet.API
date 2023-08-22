@@ -11,6 +11,10 @@ using BCrypt; // Import the BCrypt namespace
 using BCrypt.Net; // Import the BCrypt.Net namespace
 using Tweet.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
 
 namespace Tweet.API.Controller
 {

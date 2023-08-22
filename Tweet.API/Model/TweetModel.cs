@@ -1,4 +1,7 @@
-﻿namespace Tweet.API.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace Tweet.API.Model
 {
     public class TweetModel
     {

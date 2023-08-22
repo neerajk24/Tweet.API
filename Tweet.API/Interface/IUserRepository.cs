@@ -1,4 +1,5 @@
-﻿using Tweet.API.Entities;
+﻿using System.Threading.Tasks;
+using Tweet.API.Entities;
 
 namespace Tweet.API.Interface
 {

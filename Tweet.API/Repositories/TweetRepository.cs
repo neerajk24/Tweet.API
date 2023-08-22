@@ -2,6 +2,9 @@
 using Tweet.API.Data;
 using Tweet.API.Interface;
 using Tweet.API.Entities;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tweet.API.Repositories
 {
