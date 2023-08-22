@@ -2,9 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<UserSecretsId>a2585451-0a99-4e95-94c0-a757eb9cf250</UserSecretsId>
 		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>		
 	</PropertyGroup>

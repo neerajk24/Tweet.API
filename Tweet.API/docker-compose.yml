@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  tweetapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ProjectTweet;User Id=sa;Password=YourStrongPasswordHere!; 
+
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      SA_PASSWORD: "YourStrongPasswordHere!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"

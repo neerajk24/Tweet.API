@@ -1,0 +1,44 @@
+# Ignore dotnet logs
+*.log
+
+# Ignore local settings and configurations
+appsettings.local.json
+appsettings.Development.json
+launchSettings.json
+
+# Ignore the bin and obj directories to avoid copying build artifacts
+**/bin/**
+**/obj/**
+
+# Ignore all .git related
+.git
+.gitignore
+.gitattributes
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Visual Studio temporary files, build results, and
+# Files created by popular Visual Studio add-ons
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.jfm
+
+# Ignore Rider IDE
+.idea/
+
+# Ignore Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Ignore Mac OS image file caches
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ignore NodeJS/NPM logs & generated folders
+npm-debug.log*
+node_modules/
